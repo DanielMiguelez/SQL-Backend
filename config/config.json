@@ -5,7 +5,12 @@
     "database": "redSocialMarzo23",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "jwt_secret":"mimamamemima"
+    "jwt_secret":"mimamamemima",
+    "credentials":{
+      "user": "danielmiguelez1993@gmail.com",
+      "pass": "eiabqjlglqnyfhmr"
+    }
+    
   },
   "test": {
     "username": "root",

@@ -1,8 +1,10 @@
 const { User, Post, Token, Sequelize } = require("../models/index.js");
 const bcrypt = require("bcryptjs");
+const transporter = require("../config/nodemailer");
 const jwt = require("jsonwebtoken");
 const { jwt_secret } = require("../config/config.json")["development"];
-const {Op} = Sequelize
+const { Op } = Sequelize;
+
 const UserController = {
   async createUser(req, res, next) {
     try {
@@ -13,14 +15,45 @@ const UserController = {
       const user = await User.create({
         ...req.body,
         password: password,
+        confirmed: false,
         role: "user",
       });
+      const emailToken = jwt.sign({ email: req.body.email }, jwt_secret, {
+        expiresIn: "48h",
+      });
+      const url = "http://localhost:8080/users/confirm/" + emailToken;
+      await transporter.sendMail({
+        to: req.body.email,
+        subject: "Confirme su registro",
+        html: `<h3>Bienvenido, estás a un paso de registrarte </h3> 
+        <a href="${url}"> Click para confirmar tu registro</a> 
+        `,
+      });
       res.status(201).send({
-        message: "User created",
+        message: "Please check your email and confirm ",
         user,
       });
     } catch (error) {
       next(error);
+    }
+  },
+
+  async confirm(req, res) {
+    try {
+      const token = req.params.email;
+      const payload = jwt.verify(token, jwt_secret);
+      await User.update(
+        { confirmed: true },
+        {
+          where: {
+            email: payload.email,
+          },
+        }
+      );
+
+      res.status(201).send("Usuario confirmado con éxito");
+    } catch (error) {
+      console.error(error);
     }
   },
 
@@ -34,6 +67,9 @@ const UserController = {
 
       if (!user) {
         return res.status(400).send("incorrect user or password");
+      }
+      if (!user.confirmed) {
+        return res.status(400).send({ message: "Debes confirmar tu correo" });
       }
       const isMatch = await bcrypt.compare(req.body.password, user.password);
       if (!isMatch) {
