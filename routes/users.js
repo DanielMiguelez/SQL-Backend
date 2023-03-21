@@ -4,7 +4,7 @@ const UserController = require('../controllers/UserController');
 const { authentication } = require("../middlewares/authentication");
 
 router.post("/createUser", UserController.createUser )
-router.get('/confirm/:email',UserController.confirm)
+//router.get('/confirm/:email',UserController.confirm)
 router.delete("/logout",authentication, UserController.logout )
 router.post("/login", UserController.login )
 router.get("/getUsers", UserController.getUsers )

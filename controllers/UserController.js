@@ -38,7 +38,7 @@ const UserController = {
     }
   },
 
-  async confirm(req, res) {
+  /*async confirm(req, res) {
     try {
       const token = req.params.email;
       const payload = jwt.verify(token, jwt_secret);
@@ -55,7 +55,7 @@ const UserController = {
     } catch (error) {
       console.error(error);
     }
-  },
+  },*/
 
   async login(req, res) {
     try {
@@ -68,9 +68,9 @@ const UserController = {
       if (!user) {
         return res.status(400).send("incorrect user or password");
       }
-      if (!user.confirmed) {
+      /*if (!user.confirmed) {
         return res.status(400).send({ message: "Debes confirmar tu correo" });
-      }
+      }*/
       const isMatch = await bcrypt.compare(req.body.password, user.password);
       if (!isMatch) {
         return res.status(400).send("Incorrect user or password");
@@ -78,7 +78,7 @@ const UserController = {
       const token = jwt.sign({ id: user.id }, jwt_secret);
       Token.create({ token, UserId: user.id });
 
-      res.send({ msg: "Welcome " + user.name, token });
+      res.send({ msg: "Welcome " + user.name , token });
     } catch (error) {
       console.error(error);
       res.status(500).send(error);
