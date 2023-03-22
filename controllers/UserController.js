@@ -30,7 +30,7 @@ const UserController = {
         `,
       });
       res.status(201).send({
-        message: "Please check your email and confirm ",
+        message: "Succesfully creted, Please check your email and confirm ",
         user,
       });
     } catch (error) {
@@ -78,7 +78,7 @@ const UserController = {
       const token = jwt.sign({ id: user.id }, jwt_secret);
       Token.create({ token, UserId: user.id });
 
-      res.send({ msg: "Welcome " + user.name , token });
+      res.send({ msg: "Welcome " + user.name , token, user });
     } catch (error) {
       console.error(error);
       res.status(500).send(error);
