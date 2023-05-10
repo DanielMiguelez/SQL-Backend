@@ -43,13 +43,13 @@ const PostController = {
 
   async getOnePostByName(req, res) {
     try {
-      const post = await Post.findOne({
+      const posts = await Post.findAll({
         where: {
           title: req.params.title,
         },
         include: [User],
       });
-      res.send(post);
+      res.send(posts);
     } catch (error) {
       console.error(error);
       res.status(500).send({ msg: "There was a problem", error });

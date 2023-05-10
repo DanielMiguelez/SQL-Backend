@@ -1,6 +1,6 @@
 const { User, Post, Token, Sequelize } = require("../models/index.js");
 const bcrypt = require("bcryptjs");
-const transporter = require("../config/nodemailer");
+//const transporter = require("../config/nodemailer");
 const jwt = require("jsonwebtoken");
 const { jwt_secret } = require("../config/config.json")["development"];
 const { Op } = Sequelize;
@@ -18,7 +18,7 @@ const UserController = {
         confirmed: false,
         role: "user",
       });
-      const emailToken = jwt.sign({ email: req.body.email }, jwt_secret, {
+      /*const emailToken = jwt.sign({ email: req.body.email }, jwt_secret, {
         expiresIn: "48h",
       });
       const url = "http://localhost:8080/users/confirm/" + emailToken;
@@ -28,7 +28,7 @@ const UserController = {
         html: `<h3>Bienvenido, estás a un paso de registrarte </h3> 
         <a href="${url}"> Click para confirmar tu registro</a> 
         `,
-      });
+      });*/
       res.status(201).send({
         message: "Succesfully creted, Please check your email and confirm ",
         user,
